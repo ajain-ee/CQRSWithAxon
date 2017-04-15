@@ -17,6 +17,8 @@ public class AddItemCommand {
 
     private String name;
 
+    private Integer cartId;
+
     public AddItemCommand() {
         // TODO Auto-generated constructor stub
         itemId = UUID.randomUUID().toString();
@@ -27,13 +29,19 @@ public class AddItemCommand {
         this.itemId = itemId;
     }
 
-    public AddItemCommand(String itemId, Integer quantity, String code, String description, String name) {
+    public AddItemCommand(String itemId, Integer quantity, String code, String description, String name, Integer cartId) {
         this.itemId = itemId;
         this.quantity = quantity;
         this.code = code;
         this.description = description;
         this.name = name;
+        this.cartId = cartId;
     }
+
+    public Integer getCartId() {
+        return cartId;
+    }
+
 
     public String getCode() {
         return code;

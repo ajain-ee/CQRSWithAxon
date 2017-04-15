@@ -3,6 +3,7 @@ package org.example.scripts;
 import org.axonframework.repository.Repository;
 import org.axonframework.unitofwork.DefaultUnitOfWork;
 import org.axonframework.unitofwork.UnitOfWork;
+import org.example.model.CartItem;
 import org.example.model.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,8 +36,20 @@ public class Db {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 UnitOfWork uow = DefaultUnitOfWork.startAndGet();
-                repository.add(new ShoppingCart("1"));
-                repository.add(new ShoppingCart("2"));
+                final ShoppingCart shoppingCart1 = new ShoppingCart(1);
+                final ShoppingCart shoppingCart2 = new ShoppingCart(2);
+
+                final CartItem item1 = new CartItem("item1", "soap", "Dove", "Beauty Soap", 1);
+                final CartItem item2 = new CartItem("item1", "soap", "Dove", "Beauty Soap", 1);
+
+                item1.setShoppingcart(shoppingCart1);
+                item2.setShoppingcart(shoppingCart2);
+
+                shoppingCart1.addItem(item1);
+                shoppingCart2.addItem(item2);
+
+                repository.add(shoppingCart1);
+                repository.add(shoppingCart2);
                 uow.commit();
             }
         });

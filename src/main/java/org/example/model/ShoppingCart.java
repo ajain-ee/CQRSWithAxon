@@ -2,58 +2,67 @@ package org.example.model;
 
 import org.axonframework.domain.AbstractAggregateRoot;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 public class ShoppingCart extends AbstractAggregateRoot {
 
     @Id
-    private String id;
+    @Column(name = "cartId")
+    private Integer cartId;
 
-    @Column
-    private Integer quantity;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "shoppingcart", cascade = CascadeType.ALL)
+    List <CartItem> cartItemList;
+
 
     public ShoppingCart() {
-        // for axon
     }
 
-    public ShoppingCart(String id) {
-        this.id = id;
-        this.quantity = 0;
+    public ShoppingCart(Integer cartId) {
+        this.cartId = cartId;
+        this.cartItemList = new ArrayList <>();
+    }
+
+    public ShoppingCart(Integer cartId, List <CartItem> cartItemList) {
+        this.cartId = cartId;
+        this.cartItemList = cartItemList;
     }
 
     @Override
     public Object getIdentifier() {
-        return id;
+        return cartId;
     }
 
-    public void addItem(Integer quantity){
-        this.quantity = quantity;
+    public void addItem(CartItem item) {
+        this.cartItemList.add(item);
     }
 
-    public String getId() {
-        return id;
+    public Integer getCartId() {
+        return cartId;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public List <CartItem> getCartItemList() {
+        return cartItemList;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setIdentifier(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
+    //@Override
+   /* public String toString() {
         return "ShoppingCart{" +
-                "id='" + id + '\'' +
-                ", quantity=" + quantity +
+                "cartId='" + cartId + '\'' +
+                ", cartItemList=" + cartItemList +
                 '}';
-    }
+    }*/
+
+   public Map<String, Object> toMap() {
+       Map hashmap = new HashMap();
+       hashmap.put("cartId",this.cartId);
+       final List <Map <String, Object>> items = cartItemList.stream().map(item -> item.toHashMap()).collect(Collectors.toList());
+       hashmap.put("items",items);
+       return hashmap;
+   }
 }
