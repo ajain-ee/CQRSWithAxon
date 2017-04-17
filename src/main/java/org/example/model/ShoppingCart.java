@@ -1,6 +1,7 @@
 package org.example.model;
 
 import org.axonframework.domain.AbstractAggregateRoot;
+import org.example.event.AddItemEvent;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class ShoppingCart extends AbstractAggregateRoot {
 
     public void addItem(CartItem item) {
         this.cartItemList.add(item);
+        AddItemEvent addItemEvent = new AddItemEvent(this.cartId,item);
+        registerEvent(addItemEvent);
     }
 
     public Integer getCartId() {
